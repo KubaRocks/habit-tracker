@@ -8,7 +8,7 @@ on:
       - '*'
 
 env:
-  DATABASE_URL: mysql://root:nextjs@localhost:3306/habit_tracker
+  DATABASE_URL: mysql://root:nextjs@db:3306/habit_tracker
 
 jobs:
   test:
@@ -19,9 +19,6 @@ jobs:
     services:
       db:
         image: mysql
-        restart: unless-stopped
-        ports:
-          - "3306:3306"
         environment:
           MYSQL_ROOT_PASSWORD: nextjs
           MYSQL_DATABASE: habit_tracker
