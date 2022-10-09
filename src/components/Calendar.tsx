@@ -3,6 +3,7 @@ import { useCalendarStore } from "@app/hooks/useCalendarStore";
 import { CalendarNavigation } from "@app/components/CalendarNavigation";
 import { Day } from "@app/components/Day";
 import { HabitWithLogs } from "@app/pages";
+import { currentStreak } from "@app/utils/currentStreak";
 
 export const Calendar: React.FC<{ habit: HabitWithLogs }> = ({ habit }) => {
   const [blankDays, setBlankDays] = useState<number[]>([]);
@@ -58,11 +59,15 @@ export const Calendar: React.FC<{ habit: HabitWithLogs }> = ({ habit }) => {
                 {year}
               </span>
             </div>
-            <div>
-              <span className="text-lg font-bold text-gray-800">
-                {habit?.name}
-              </span>
-            </div>
+            {habit && (
+              <div>
+                <span className="text-lg font-bold text-gray-800">
+                  {habit.name}
+                </span>{" "}
+                streak:{" "}
+                {currentStreak(habit.logs.map((log) => log.participatedAt))}
+              </div>
+            )}
             <CalendarNavigation />
           </div>
 
