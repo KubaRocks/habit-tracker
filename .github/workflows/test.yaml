@@ -19,7 +19,7 @@ jobs:
     services:
       db:
         image: mysql
-        environment:
+        env:
           MYSQL_ROOT_PASSWORD: nextjs
           MYSQL_DATABASE: habit_tracker
           TZ: Europe/Warsaw
