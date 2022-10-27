@@ -23,7 +23,8 @@ RUN sed '1d' next.config.mjs
 
 RUN \
  SKIP_ENV_VALIDATION=1 npm run build; \
- && SKIP_ENV_VALIDATION=1 prisma generate && prisma migrate deploy;
+ && prisma generate; \
+ && prisma migrate deploy;
 
 ##### RUNNER
 
