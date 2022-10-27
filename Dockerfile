@@ -22,6 +22,8 @@ COPY . .
 # RUN sed '1d' next.config.mjs
 
 RUN SKIP_ENV_VALIDATION=1 npm run build
+RUN npx prisma generate \
+    && npx prisma migrate deploy
 
 ##### RUNNER
 
