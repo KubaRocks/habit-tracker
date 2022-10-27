@@ -5,19 +5,9 @@ RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Install Prisma Client - remove if not using Prisma
-
 COPY prisma ./
-
-# Install dependencies based on the preferred package manager
-
-COPY package.json yarn.lock* package-lock.json* ./
-
-RUN \
- if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
- elif [ -f package-lock.json ]; then npm ci; \
- elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
- else echo "Lockfile not found." && exit 1; \
- fi
+COPY package.json package-lock.json* ./
+RUN npm ci
 
 ##### BUILDER
 
@@ -32,11 +22,8 @@ COPY . .
 RUN sed '1d' next.config.mjs
 
 RUN \
- if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn build; \
- elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build; \
- elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && SKIP_ENV_VALIDATION=1 pnpm run build; \
- else echo "Lockfile not found." && exit 1; \
- fi
+ SKIP_ENV_VALIDATION=1 npm run build; \
+ && SKIP_ENV_VALIDATION=1 prisma generate && prisma migrate deploy;
 
 ##### RUNNER
 
