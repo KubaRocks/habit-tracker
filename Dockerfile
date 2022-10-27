@@ -21,10 +21,7 @@ COPY . .
 # ENV NEXT_TELEMETRY_DISABLED 1
 # RUN sed '1d' next.config.mjs
 
-RUN \
- SKIP_ENV_VALIDATION=1 npm run build \
- && npm run prisma:generate \
- && npm run prisma:migrate;
+RUN SKIP_ENV_VALIDATION=1 npm run build
 
 ##### RUNNER
 
@@ -32,6 +29,9 @@ FROM --platform=linux/amd64 node:16-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+
+RUN npm run prisma:generate \
+ && npm run prisma:migrate;
 
 # ENV NEXT_TELEMETRY_DISABLED 1
 
