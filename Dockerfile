@@ -19,10 +19,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # ENV NEXT_TELEMETRY_DISABLED 1
-RUN sed '1d' next.config.mjs
+# RUN sed '1d' next.config.mjs
 
 RUN \
- SKIP_ENV_VALIDATION=1 npm run build; \
+ SKIP_ENV_VALIDATION=1 npm run build \
  && npm run prisma:generate \
  && npm run prisma:migrate;
 
