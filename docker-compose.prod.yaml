@@ -12,7 +12,8 @@ services:
     networks: [ proxy, habit_tracker ]
     image: habit-tracker
     environment:
-      - DATABASE_URL=mysql://root:nextjs@db:3306/habit_tracker
+      DATABASE_URL: mysql://root:nextjs@db:3306/habit_tracker
+      NODE_ENV: production
     labels:
       traefik.enable: true
       traefik.http.routers.habit_tracker.entrypoints: http
