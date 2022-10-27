@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  app:
+    platform: "linux/amd64"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CLIENTVAR: "clientvar"
+    working_dir: /app
+    networks: [ proxy, habit_tracker ]
+    image: habit-tracker
+    environment:
+      - DATABASE_URL=mysql://root:nextjs@db:3306/habit_tracker
+    labels:
+      traefik.enable: true
+      traefik.http.routers.habit_tracker.entrypoints: http
+      traefik.http.routers.habit_tracker.rule: Host(`habit.plgn.xyz`)
+      traefik.http.middlewares.habit_tracker-https-redirect.redirectscheme.scheme: https
+      traefik.http.routers.habit_tracker.middlewares: habit_tracker-https-redirect
+      traefik.http.routers.habit_tracker-secure.entrypoints: https
+      traefik.http.routers.habit_tracker-secure.rule: Host(`habit.plgn.xyz`)
+      traefik.http.routers.habit_tracker-secure.tls: true
+      traefik.http.routers.habit_tracker-secure.service: habit_tracker
+      traefik.http.services.habit_tracker.loadbalancer.server.port: 3000
+      traefik.docker.network: proxy
+  db:
+    networks: [ habit_tracker ]
+    environment:
+      MYSQL_ROOT_PASSWORD: nextjs
+      MYSQL_DATABASE: habit_tracker
+      TZ: Europe/Warsaw
+    volumes:
+      - mysql:/var/lib/mysql
+
+volumes:
+  mysql: ~
+
+networks:
+  habit_tracker:
+    external: false
+  proxy:
+    external: true
