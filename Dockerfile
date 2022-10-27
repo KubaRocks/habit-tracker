@@ -1,7 +1,7 @@
 ##### DEPENDENCIES
 
 FROM --platform=linux/amd64 node:16-alpine AS deps
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat openssl sed
 WORKDIR /app
 
 # Install Prisma Client - remove if not using Prisma
@@ -11,6 +11,8 @@ COPY prisma ./
 # Install dependencies based on the preferred package manager
 
 COPY package.json yarn.lock* package-lock.json* ./
+
+RUN sed '1d' next.config.mjs
 
 RUN \
  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
