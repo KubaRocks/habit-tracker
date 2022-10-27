@@ -12,6 +12,7 @@ services:
     working_dir: /app
     networks: [ proxy, habit_tracker ]
     image: habit-tracker
+    links: [db]
     environment:
       DATABASE_URL: mysql://root:nextjs@db:3306/habit_tracker
     labels:
