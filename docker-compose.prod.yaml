@@ -1,20 +1,37 @@
 version: "3.9"
 
 services:
+  db:
+    image: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: nextjs
+      MYSQL_DATABASE: habit_tracker
+      TZ: Europe/Warsaw
+    volumes:
+      - mysql:/var/lib/mysql
+
+  migrate:
+    build:
+      context: .
+      target: db-migrator
+    environment:
+      DATABASE_URL: mysql://root:nextjs@db:3306/habit_tracker?connection_timeout=300
+    depends_on:
+      - db
+
   app:
     platform: "linux/amd64"
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_CLIENTVAR: "clientvar"
-        DATABASE_URL: mysql://root:nextjs@db:3306/habit_tracker
     working_dir: /app
-    networks: [ proxy, habit_tracker ]
+    networks: [ proxy, default ]
     image: habit-tracker
-    links: [db]
+    depends_on:
+      - db
     environment:
       DATABASE_URL: mysql://root:nextjs@db:3306/habit_tracker
+      NEXT_PUBLIC_API_URL: https://habit.plgn.xyz
     labels:
       traefik.enable: true
       traefik.http.routers.habit_tracker.entrypoints: http
@@ -27,21 +44,10 @@ services:
       traefik.http.routers.habit_tracker-secure.service: habit_tracker
       traefik.http.services.habit_tracker.loadbalancer.server.port: 3000
       traefik.docker.network: proxy
-  db:
-    ports: []
-    networks: [ habit_tracker ]
-    environment:
-      MYSQL_ROOT_PASSWORD: nextjs
-      MYSQL_DATABASE: habit_tracker
-      TZ: Europe/Warsaw
-    volumes:
-      - mysql:/var/lib/mysql
 
 volumes:
   mysql: ~
 
 networks:
-  habit_tracker:
-    external: false
   proxy:
     external: true

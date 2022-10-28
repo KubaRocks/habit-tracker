@@ -6,3 +6,5 @@ npm-debug.log
 README.md
 .next
 .git
+docker-compose.prod.yaml
+docker-compose.yaml

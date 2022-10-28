@@ -10,7 +10,7 @@ import "src/styles/globals.css";
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <div className="bg-gray-100">
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </div>
   );
 };
