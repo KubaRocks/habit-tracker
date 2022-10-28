@@ -7,5 +7,5 @@ start-production: ## Start the production docker container.
 	docker compose -f docker-compose.prod.yaml up -d
 
 .PHONY: pull
-pull:
-  git pull
+pull: ## Pull latest changes from git
+	@git pull
