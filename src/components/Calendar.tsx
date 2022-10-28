@@ -77,7 +77,7 @@ export const Calendar: React.FC<{ habit: HabitWithLogs }> = ({ habit }) => {
               {/* iterate over days */}
               {DAYS.map((DAY) => (
                 <div key={DAY} className="w-[14.26%] px-2 py-2">
-                  <div className="text-center text-sm font-bold uppercase tracking-wide text-gray-600">
+                  <div className="relative z-10 text-center text-sm font-bold uppercase tracking-wide text-gray-600">
                     {DAY}
                   </div>
                 </div>
